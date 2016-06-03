@@ -1,0 +1,7 @@
+{
+    "name": "kwin/kapi",
+    "description": "Demo package for api",
+    "type": "coreapi",
+    "minimum-stability": "dev",
+    "require": {}
+}
