@@ -20,14 +20,18 @@ class ServiceHandler
         return new $serviceClass($serviceInfo);
     }
 
-    public static function handleRequest($version, $service, $action = null, $param = null, $payload = null, $format = null, $header = [])
+    public static function handleRequest($version, $service, $action = null, $param = null)
     {
         self::isServiceValid($service);
-        dd($action);
-	$uri = request();
-	echo $version.'---'.$service.'---'.$action.'---'.$param;
+        switch (strtolower($service)){
+            case 'user':
+                $user = new User();
+                return $user->userAction($action, $param);
+            break;
+                
+        }
+        
 	
-	dd('kevin patel');
         
     }
     

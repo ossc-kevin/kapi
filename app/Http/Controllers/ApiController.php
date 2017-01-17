@@ -53,7 +53,6 @@ class ApiController extends CoreApiController
         
         try{
             $response = $this->handleService( $version, $service, $resource);
-            $response = ['code'=>200,'game'=>'over'];
             return $this->response->jsonResponse($response);
         } catch (\Exception $ex) {
             return $this->response->exceptions($ex);
@@ -152,7 +151,7 @@ class ApiController extends CoreApiController
 		$param = $temp_arr[1];
 		
 	    }
-            $response = ServiceHandler::handleRequest($version, $service, $action,$param);
+            return $response = ServiceHandler::handleRequest($version, $service, $action,$param);
 
 
 //        if ($response instanceof RedirectResponse) {

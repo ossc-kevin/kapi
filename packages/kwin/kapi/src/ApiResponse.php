@@ -13,8 +13,8 @@ class ApiResponse
     public $statusTexts = [
         'INVALID_REQUEST'=>400,
     ];
-    public function jsonResponse($data){
-         return response($data, 404)
+    public function jsonResponse($response){
+         return response($response['data'], $response['code'])
                  ->withHeaders([
                 'Content-Type' => 'application/json',
                 'X-Token' => 'kevin patel',

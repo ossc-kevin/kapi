@@ -9,24 +9,28 @@ namespace Kwin\Kapi;
  */
 class User
 {
-    public function userAction($action, $param){
-	dd('User get function call');
+    public function __call($name, $arguments) {
+       throw new \Exception('INVALID_REQUEST');
     }
-
+    
+    public function userAction($action, $param){
+	return $this->$action($param);
+    }
+    
     public function get($param){
-	
-	dd('User get function call'.$param);
+	$user = \App\User::findorFail($param);
+	return ['code'=>200,'data'=>$user];
     }
     
     public function add(){
-	dd('User add function call');
+	['code'=>200,'data'=>['message'=>'User add function call']];
     }
     
     public function update(){
-	dd('User update function call');
+	return ['code'=>200,'data'=>['message'=>'User update function call']];
     }
     
     public function delete(){
-	dd('User delete function call');
+	return ['code'=>200,'data'=>['message'=>'User delete function call']];
     }
 }
