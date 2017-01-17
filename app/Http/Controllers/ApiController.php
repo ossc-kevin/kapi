@@ -1,9 +1,8 @@
 <?php
 namespace App\Http\Controllers;
-use Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Illuminate\Http\Request;
 use Kwin\Kapi\ServiceHandler;
+use Kwin\Kapi\ApiResponse;
 /**
  * Class RestController
  *
@@ -11,11 +10,13 @@ use Kwin\Kapi\ServiceHandler;
  */
 class ApiController extends CoreApiController
 {
+    private $response;
     /**
      * Create new Rest Controller.
      */
-    public function __construct(){
-        //$this->middleware('access_check');
+    public function __construct(ApiResponse $response){
+//        $this->middleware('api');
+        $this->response = $response;
     }
 
     /**
@@ -26,7 +27,7 @@ class ApiController extends CoreApiController
      * @return null|ServiceResponseInterface
      */
     public function index(
-        /** @noinspection PhpUnusedParameterInspection */
+        /** @noinspection PhpUnusedParameterInspection */          
         $version = null
     ){
         try {
@@ -38,72 +39,6 @@ class ApiController extends CoreApiController
 
         return ResponseFactory::sendResponse($response);
     }
-
-    /**
-     * Handles the GET requests
-     *
-     * @param null|string $service
-     * @param null|string $resource
-     *
-     * @return null|ServiceResponseInterface
-     */
-    public function handleV1GET($service = null, $resource = null)
-    {
-	return $this->handleGET('v1', $service, $resource);
-    }
-
-    /**
-     * Handles the POST requests
-     *
-     * @param null|string $service
-     * @param null|string $resource
-     *
-     * @return null|ServiceResponseInterface
-     */
-    public function handleV1POST($service = null, $resource = null)
-    {
-        return $this->handlePOST('v1', $service, $resource);
-    }
-
-    /**
-     * Handles the PUT requests
-     *
-     * @param null|string $service
-     * @param null|string $resource
-     *
-     * @return null|ServiceResponseInterface
-     */
-    public function handleV1PUT($service = null, $resource = null)
-    {
-        return $this->handlePUT('v1', $service, $resource);
-    }
-
-    /**
-     * Handles the PATCH requests
-     *
-     * @param null|string $service
-     * @param null|string $resource
-     *
-     * @return null|ServiceResponseInterface
-     */
-    public function handleV1PATCH($service = null, $resource = null)
-    {
-        return $this->handlePATCH('v1', $service, $resource);
-    }
-
-    /**
-     * Handles DELETE requests
-     *
-     * @param null|string $service
-     * @param null|string $resource
-     *
-     * @return null|ServiceResponseInterface
-     */
-    public function handleV1DELETE($service = null, $resource = null)
-    {
-        return $this->handleDELETE('v1', $service, $resource);
-    }
-
     /**
      * Handles the GET requests
      *
@@ -115,8 +50,14 @@ class ApiController extends CoreApiController
      */
     public function handleGET($version = null, $service = null, $resource = null)
     {	
-	
-        return $this->handleService($version, $service, $resource);
+        
+        try{
+            $response = $this->handleService( $version, $service, $resource);
+            $response = ['code'=>200,'game'=>'over'];
+            return $this->response->jsonResponse($response);
+        } catch (\Exception $ex) {
+            return $this->response->exceptions($ex);
+        }
     }
 
     /**
@@ -130,19 +71,13 @@ class ApiController extends CoreApiController
      */
     public function handlePOST($version = null, $service = null, $resource = null)
     {
-        // Check for the various method override headers or query params
-        $xMethod =
-            Request::header('X-HTTP-Method',
-                Request::header('X-HTTP-Method-Override',
-                    Request::header('X-Method-Override', Request::query('method'))));;
-        if (!empty($xMethod)) {
-            if (!in_array($xMethod, Verbs::getDefinedConstants())) {
-                throw new MethodNotAllowedHttpException("Invalid verb tunneling with " . $xMethod);
-            }
-            Request::setMethod($xMethod);
+        try{
+//            $response = $this->handleService($request,$version, $service, $resource);
+            $response = ['code'=>200,'game'=>'over'];
+            return $this->response->jsonResponse($response);
+        } catch (\Exception $ex) {
+            return $this->response->exceptions($ex);
         }
-
-        return $this->handleService($version, $service, $resource);
     }
 
     /**
@@ -198,7 +133,6 @@ class ApiController extends CoreApiController
      */
     public function handleService($version = null, $service, $resource = null)
     {
-        try {
             $service = strtolower($service);
 
             // fix removal of trailing slashes from resource
@@ -218,12 +152,8 @@ class ApiController extends CoreApiController
 		$param = $temp_arr[1];
 		
 	    }
-	   
-
             $response = ServiceHandler::handleRequest($version, $service, $action,$param);
-        } catch (\Exception $e) {
-            //$response = ResponseFactory::create($e);
-        }
+
 
 //        if ($response instanceof RedirectResponse) {
 //            return $response;

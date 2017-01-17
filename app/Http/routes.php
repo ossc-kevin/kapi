@@ -27,7 +27,7 @@ $resourcePathPattern = '[0-9a-zA-Z-_@&\#\!=,:;\/\^\$\.\|\{\}\[\]\(\)\*\+\? ]+';
 $servicePattern = '[_0-9a-zA-Z-.]+';
 
 Route::group(
-    ['prefix' => 'api'],
+    ['prefix' => 'api','middleware' => 'api'],
     function () use ($resourcePathPattern, $servicePattern){
         Route::get('{version}/', 'ApiController@index');
         Route::get('{version}/{service}/{resource?}', 'ApiController@handleGET')->where(

@@ -22,11 +22,20 @@ class ServiceHandler
 
     public static function handleRequest($version, $service, $action = null, $param = null, $payload = null, $format = null, $header = [])
     {
-	
+        self::isServiceValid($service);
+        dd($action);
+	$uri = request();
 	echo $version.'---'.$service.'---'.$action.'---'.$param;
-	$user = new User();
-	$user->$action($param);
+	
 	dd('kevin patel');
+        
+    }
+    
+    public static function isServiceValid($service){
+        if(!empty($service) && in_array($service,config('kapi.services')))
+                return true;
+        throw new \Exception('INVALID_REQUEST');
+        
         
     }
 }
