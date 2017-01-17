@@ -30,7 +30,7 @@ class ApiResponse
                                 'Content-Type' => 'application/json',
             ]);
         }
-        return response(['message' => 'UNIDENFINED_EXCEPTION'], $this->statusTexts[$message])
+        return response($exception, 417)
                         ->withHeaders([
                             'Content-Type' => 'application/json',
         ]);

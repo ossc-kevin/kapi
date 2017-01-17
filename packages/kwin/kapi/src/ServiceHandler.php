@@ -28,6 +28,10 @@ class ServiceHandler
                 $user = new User();
                 return $user->userAction($action, $param);
             break;
+            case 'login':
+                $user = new User();
+                return $user->login();
+            break;
                 
         }
         

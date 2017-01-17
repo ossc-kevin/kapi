@@ -18,8 +18,13 @@ class User
     }
     
     public function get($param){
-	$user = \App\User::findorFail($param);
-	return ['code'=>200,'data'=>$user];
+         if(is_numeric($param))
+            $user = \App\User::findorFail($param);
+         if(strtolower($param) == 'all')
+             $user = \App\User::all();
+         else
+             throw new \Exception('INVALID_REQUEST');
+        return ['code'=>200,'data'=>$user]; 
     }
     
     public function add(){
@@ -32,5 +37,10 @@ class User
     
     public function delete(){
 	return ['code'=>200,'data'=>['message'=>'User delete function call']];
+    }
+    
+    public function login(){
+        dd(request()->get('username'));
+        return ['code'=>201,'data'=>['login']];
     }
 }

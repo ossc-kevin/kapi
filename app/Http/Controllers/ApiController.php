@@ -71,8 +71,7 @@ class ApiController extends CoreApiController
     public function handlePOST($version = null, $service = null, $resource = null)
     {
         try{
-//            $response = $this->handleService($request,$version, $service, $resource);
-            $response = ['code'=>200,'game'=>'over'];
+            $response = $this->handleService($version, $service, $resource);
             return $this->response->jsonResponse($response);
         } catch (\Exception $ex) {
             return $this->response->exceptions($ex);
